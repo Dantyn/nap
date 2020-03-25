@@ -1,0 +1,155 @@
+#
+#  Panoramix v4 Oct 2019 
+#  Decompiled source of 0xF634a16062A6969026d0F4Aa70DB57395686B10c
+# 
+#  Let's make the world open source 
+# 
+
+def storage:
+  name is array of uint256 at storage 0
+  symbol is array of uint256 at storage 1
+  decimals is uint256 at storage 2
+  totalSupply is uint256 at storage 3
+  autoSend is uint8 at storage 4 offset 160
+  creatorAddress is addr at storage 4
+  start is uint256 at storage 5
+  end is uint256 at storage 6
+  rate is uint256 at storage 7
+  freeCount is uint256 at storage 8
+  balanceOf is mapping of uint256 at storage 9
+  buyCountOf is mapping of uint8 at storage 10
+
+def creator(): # not payable
+  return creatorAddress
+
+def buyCountOf(address _param1): # not payable
+  return buyCountOf[_param1]
+
+def name(): # not payable
+  return name[0 len name.length]
+
+def totalSupply(): # not payable
+  return totalSupply
+
+def rate(): # not payable
+  return rate
+
+def decimals(): # not payable
+  return decimals
+
+def balanceOf(address _owner): # not payable
+  return balanceOf[_owner]
+
+def symbol(): # not payable
+  return symbol[0 len symbol.length]
+
+def autoSend(): # not payable
+  return bool(autoSend)
+
+def freeCount(): # not payable
+  return freeCount
+
+def start(): # not payable
+  return start
+
+def end(): # not payable
+  return end
+
+#
+#  Regular functions
+#
+
+def getETH(): # not payable
+  require eth.balance(this.address) > 0
+  require caller == creatorAddress
+  call creatorAddress with:
+     value eth.balance(this.address) wei
+       gas 2300 * is_zero(value) wei
+  require ext_call.success
+
+def transfer(address _to, uint256 _value): # not payable
+  require _to
+  require _to != caller
+  require balanceOf[caller] >= _value
+  require balanceOf[addr(_to)] + _value > balanceOf[addr(_to)]
+  balanceOf[caller] -= _value
+  balanceOf[addr(_to)] += _value
+  log Transfer(
+        address from=_value,
+        address to=caller,
+        uint256 value=_to)
+  require balanceOf[caller] + balanceOf[addr(_to)] == balanceOf[caller] + balanceOf[addr(_to)]
+
+def _fallback() payable: # default function
+  require autoSend
+  require block.timestamp >= start
+  require block.timestamp <= end
+  if rate:
+      require call.value
+      require call.value
+      require call.value * rate / call.value == rate
+      require call.value * rate
+      require call.value * rate
+      require call.value * rate * 10^decimals / call.value * rate == 10^decimals
+      require call.value * rate * 10^decimals / 10^18 > 0
+      require creatorAddress != caller
+      require balanceOf[stor4] >= call.value * rate * 10^decimals / 10^18
+      if rate:
+          balanceOf[caller] += call.value * rate * 10^decimals / 10^18
+          balanceOf[stor4] -= call.value * rate * 10^decimals / 10^18
+          log Transfer(
+                address from=(call.value * rate * 10^decimals / 10^18),
+                address to=creatorAddress,
+                uint256 value=caller)
+          require balanceOf[caller] + balanceOf[stor4] == balanceOf[caller] + balanceOf[stor4]
+          if rate:
+              stop
+          else:
+              buyCountOf[caller] = uint8(buyCountOf[caller] + 1)
+              stop
+      else:
+          require buyCountOf[caller] < 1
+          balanceOf[caller] += call.value * rate * 10^decimals / 10^18
+          balanceOf[stor4] -= call.value * rate * 10^decimals / 10^18
+          log Transfer(
+                address from=(call.value * rate * 10^decimals / 10^18),
+                address to=creatorAddress,
+                uint256 value=caller)
+          require balanceOf[caller] + balanceOf[stor4] == balanceOf[caller] + balanceOf[stor4]
+          if rate:
+              stop
+          else:
+              buyCountOf[caller] = uint8(buyCountOf[caller] + 1)
+              stop
+  else:
+      require freeCount * 10^decimals > 0
+      require creatorAddress != caller
+      require balanceOf[stor4] >= freeCount * 10^decimals
+      if rate:
+          balanceOf[caller] += freeCount * 10^decimals
+          balanceOf[stor4] += -1 * freeCount * 10^decimals
+          log Transfer(
+                address from=(freeCount * 10^decimals),
+                address to=creatorAddress,
+                uint256 value=caller)
+          require balanceOf[caller] + balanceOf[stor4] == balanceOf[caller] + balanceOf[stor4]
+          if rate:
+              stop
+          else:
+              buyCountOf[caller] = uint8(buyCountOf[caller] + 1)
+              stop
+      else:
+          require buyCountOf[caller] < 1
+          balanceOf[caller] += freeCount * 10^decimals
+          balanceOf[stor4] += -1 * freeCount * 10^decimals
+          log Transfer(
+                address from=(freeCount * 10^decimals),
+                address to=creatorAddress,
+                uint256 value=caller)
+          require balanceOf[caller] + balanceOf[stor4] == balanceOf[caller] + balanceOf[stor4]
+          if rate:
+              stop
+          else:
+              buyCountOf[caller] = uint8(buyCountOf[caller] + 1)
+              stop
+
